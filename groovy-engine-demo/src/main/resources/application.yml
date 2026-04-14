@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:groovy_engine;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  sql:
+    init:
+      schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
+      mode: always
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# Groovy Engine 配置
+groovy:
+  engine:
+    enabled: true
+    manage:
+      api-key: demo-key-123
+      enabled: true
+    script:
+      timeout-seconds: 30
+    classloader:
+      recycle-threshold: 100
+
+logging:
+  level:
+    cn.fengin.groovy: DEBUG
+    GROOVY_SCRIPT_AUDIT: INFO

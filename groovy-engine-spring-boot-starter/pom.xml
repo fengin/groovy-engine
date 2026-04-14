@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.fengin</groupId>
+        <artifactId>groovy-engine</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>groovy-engine-spring-boot-starter</artifactId>
+    <name>Groovy Engine Spring Boot Starter</name>
+    <description>Spring Boot auto-configuration for Groovy Engine. Provides REST APIs for script management, default JDBC storage, authentication interceptor, and IDE integration.</description>
+
+    <dependencies>
+        <!-- Core 引擎 -->
+        <dependency>
+            <groupId>cn.fengin</groupId>
+            <artifactId>groovy-engine-core</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Spring Boot 自动装配 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- MyBatis-Plus — 默认 JDBC 存储实现 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

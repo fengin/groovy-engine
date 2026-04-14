@@ -1,0 +1,32 @@
+# Maven
+target/
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test scripts
+test_api.ps1
+test_download.ps1
+debug_api.ps1
+
+# H2 database
+*.db
+*.trace.db
+*.lock.db
+
+# Logs
+*.log
+logs/

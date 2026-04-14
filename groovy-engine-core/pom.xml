@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.fengin</groupId>
+        <artifactId>groovy-engine</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>groovy-engine-core</artifactId>
+    <name>Groovy Engine Core</name>
+    <description>Core engine library — pure Java, no Spring dependency. Provides script compilation, caching, execution, and tracing.</description>
+
+    <dependencies>
+        <!-- Groovy — 编译+运行时脚本支持 -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+        </dependency>
+
+        <!-- Groovy 日期扩展（Date.format() 等方法） -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-dateutil</artifactId>
+        </dependency>
+
+        <!-- SLF4J — 日志门面 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.fengin.groovy.spring.autoconfigure.GroovyEngineAutoConfiguration

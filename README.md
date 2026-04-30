@@ -128,6 +128,92 @@ class MyScript implements IBusinessScript {
 }
 ```
 
+## 🔄 脚本中使用事务
+
+Groovy 脚本运行在 Spring 容器中，但脚本本身不受 AOP 代理管理，因此 `@Transactional` 注解无法直接生效。框架推荐使用 **Spring 编程式事务（TransactionTemplate）** 来实现脚本内的事务控制。
+
+### 1. 服务端注入 TransactionTemplate
+
+在 `IScriptContextFactory` 实现类中，将 `TransactionTemplate` 注入到脚本上下文：
+
+```java
+@Component
+public class MyScriptContextFactory implements IScriptContextFactory {
+
+    @Resource
+    private MyQueryService queryService;
+    
+    @Resource
+    private MyWriteService writeService;
+    
+    @Resource
+    private TransactionTemplate transactionTemplate;  // Spring 自动装配
+
+    @Override
+    public Map<String, Object> buildContext(Map<String, Object> params) {
+        Map<String, Object> ctx = new HashMap<>();
+        ctx.put("params", params);
+        ctx.put("queryService", queryService);
+        ctx.put("writeService", writeService);
+        ctx.put("tx", transactionTemplate);  // 注入事务模板
+        return ctx;
+    }
+}
+```
+
+### 2. 脚本中使用事务
+
+在 `tx.execute()` 闭包内的所有数据库操作会在同一个事务中执行，正常返回则提交，抛异常则回滚：
+
+```groovy
+import cn.fengin.groovy.api.IBusinessScript
+
+class OrderScript implements IBusinessScript {
+    Object execute(Map<String, Object> ctx) {
+        def t = ctx.t
+        def writeService = ctx.writeService
+        def tx = ctx.tx  // TransactionTemplate
+
+        // 事务内：多步写操作，要么全成功，要么全回滚
+        def orderId = tx.execute({ status ->
+            writeService.deductStock(ctx.params.productId, ctx.params.quantity)
+            t.log("库存已扣减")
+
+            def id = writeService.createOrder(ctx.params)
+            t.log("订单已创建: ${id}")
+
+            writeService.addLog(id, "下单成功")
+            t.log("流水已记录")
+
+            return id
+        })
+
+        return [status: "ok", orderId: orderId]
+    }
+}
+```
+
+### 3. 手动回滚
+
+如果需要根据业务逻辑手动回滚（而非依赖异常），可以调用 `status.setRollbackOnly()`：
+
+```groovy
+def result = ctx.tx.execute({ status ->
+    writeService.updateA(params)
+    
+    def check = queryService.verify(params)
+    if (!check.passed) {
+        status.setRollbackOnly()  // 手动标记回滚
+        return [rollback: true, reason: check.reason]
+    }
+    
+    writeService.updateB(params)
+    return [rollback: false]
+})
+```
+
+> **说明**：`TransactionTemplate` 不暴露 DataSource 或 Connection，不会突破安全沙箱限制。不需要事务的脚本无需任何改动，完全向下兼容。
+
 ## ⚙️ 配置项
 
 | 配置项 | 默认值 | 说明 |

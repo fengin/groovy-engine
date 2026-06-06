@@ -23,7 +23,8 @@ public class GroovyWebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/api/groovy/script/**");
+                .addPathPatterns("/api/groovy/script/**")
+                .excludePathPatterns("/api/groovy/script/doc/share/**");
     }
 
     @Override

@@ -47,6 +47,9 @@ public class GroovyScript implements Serializable {
     private String updateBy;
     private LocalDateTime updateTime;
 
+    /** 接口文档元数据 (JSON) */
+    private String docContent;
+
     public GroovyScript() {
     }
 
@@ -154,5 +157,13 @@ public class GroovyScript implements Serializable {
 
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getDocContent() {
+        return docContent;
+    }
+
+    public void setDocContent(String docContent) {
+        this.docContent = docContent;
     }
 }

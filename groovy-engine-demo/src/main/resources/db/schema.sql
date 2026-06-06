@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `sys_groovy_script` (
   `project_code` varchar(64) DEFAULT NULL COMMENT '项目编码（用于按项目导入/导出）',
   `category` varchar(64) DEFAULT NULL COMMENT '分类标签',
   `remark` varchar(512) DEFAULT NULL COMMENT '备注',
+  `doc_content` mediumtext DEFAULT NULL COMMENT '接口文档元数据 (JSON格式)',
   `create_by` varchar(64) DEFAULT NULL,
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP,
   `update_by` varchar(64) DEFAULT NULL,

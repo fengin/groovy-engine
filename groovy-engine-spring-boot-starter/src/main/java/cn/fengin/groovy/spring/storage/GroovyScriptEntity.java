@@ -50,4 +50,7 @@ public class GroovyScriptEntity implements Serializable {
     private LocalDateTime createTime;
     private String updateBy;
     private LocalDateTime updateTime;
+
+    /** 接口文档元数据 (JSON) */
+    private String docContent;
 }

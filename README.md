@@ -14,6 +14,7 @@
 - **代码补全** — IDE 可获取注入 Bean 的方法签名，提供智能提示
 - **安全沙箱** — BeanAccessor 白名单机制，防止脚本越权访问
 - **超时保护** — AST 级线程中断，防止死循环脚本拖垮服务
+- **接口文档与分享** — 支持一键生成接口参数文档，并支持免密公开网页分享链接，方便前后端协作
 - **Spring Boot 一键集成** — Starter 自动装配，三步接入
 - **存储可扩展** — 默认 MySQL/H2，可自定义实现 Redis、文件等存储
 - **IDE 支持** — 适配 [Groovy Web IDE](https://github.com/user/groovy-web-ide) 和 [Groovy Desktop IDE](https://github.com/user/groovy-desktop-ide)
@@ -255,6 +256,9 @@ spring:
 | GET | `/api/groovy/script/completions` | 代码补全 |
 | POST | `/api/groovy/script/refresh/{bizCode}` | 刷新缓存 |
 | POST | `/api/groovy/script/refresh/all` | 刷新全部 |
+| POST | `/api/groovy/script/doc` | 保存/更新接口文档 |
+| GET | `/api/groovy/script/doc/{bizCode}` | 获取文档数据 |
+| GET | `/api/groovy/script/doc/share/{bizCode}` | 免密网页分享文档(HTML) |
 
 所有管理接口需要 `X-Groovy-Token` Header。
 

@@ -115,17 +115,28 @@ public class ScriptExecutionService {
         } catch (GroovyEngineException e) {
             long elapsed = System.currentTimeMillis() - startTime;
             SCRIPT_LOGGER.warn("bizCode={} elapsed={}ms status=BIZ_ERROR error={}", bizCode, elapsed, e.getMessage());
-            throw e;
+            List<String> traceLogs = tracer.getLogs().isEmpty() ? null : tracer.getLogs();
+            ScriptResult result = ScriptResult.errorWithStack(e.getMessage(), getStackTraceAsString(e));
+            result.set_trace(traceLogs);
+            result.setCost(elapsed);
+            return result;
         } catch (Exception e) {
             long elapsed = System.currentTimeMillis() - startTime;
+            List<String> traceLogs = tracer.getLogs().isEmpty() ? null : tracer.getLogs();
             if (isInterruptTimeout(e)) {
                 int timeout = scriptManager.getTimeoutSeconds();
                 SCRIPT_LOGGER.error("bizCode={} elapsed={}ms status=TIMEOUT", bizCode, elapsed);
-                throw new ScriptTimeoutException(timeout);
+                ScriptResult result = ScriptResult.errorWithStack("脚本执行超时（" + timeout + "秒）", getStackTraceAsString(e));
+                result.set_trace(traceLogs);
+                result.setCost(elapsed);
+                return result;
             }
             String error = extractScriptError(e);
             SCRIPT_LOGGER.error("bizCode={} elapsed={}ms status=FAIL error={}", bizCode, elapsed, error);
-            throw new ScriptExecutionException(error, e);
+            ScriptResult result = ScriptResult.errorWithStack("业务执行异常: " + error, getStackTraceAsString(e));
+            result.set_trace(traceLogs);
+            result.setCost(elapsed);
+            return result;
         }
     }
 
@@ -195,5 +206,29 @@ public class ScriptExecutionService {
             cause = cause.getCause();
         }
         return false;
+    }
+
+    private String getStackTraceAsString(Throwable t) {
+        if (t == null) {
+            return "";
+        }
+        StringBuilder stack = new StringBuilder();
+        Throwable cause = t;
+        while (cause != null) {
+            stack.append(cause.getClass().getSimpleName()).append(": ").append(cause.getMessage()).append("\n");
+            for (StackTraceElement ste : cause.getStackTrace()) {
+                String cls = ste.getClassName();
+                if (cls.startsWith("Script") || cls.contains("$")
+                        || cls.startsWith("cn.fengin")) {
+                    stack.append("  at ").append(cls).append(".").append(ste.getMethodName())
+                            .append("(").append(ste.getFileName()).append(":").append(ste.getLineNumber()).append(")\n");
+                }
+            }
+            cause = cause.getCause();
+            if (cause != null) {
+                stack.append("Caused by: ");
+            }
+        }
+        return stack.toString();
     }
 }
